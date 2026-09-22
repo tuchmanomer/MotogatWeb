@@ -31,7 +31,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
     }
 
     // איתור התיאור מתוך שדות אפשריים שונים בגיליון
-    const productDescription = product.description || product.desc || product.details || product.summary;
+    const pAny = product as any;
+    const productDescription = pAny.description || pAny.desc || pAny.details || pAny.summary;
 
     return (
         <div style={{ padding: '60px 20px', maxWidth: '1000px', margin: '0 auto', color: '#fff', direction: 'rtl' }}>

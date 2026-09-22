@@ -1,7 +1,6 @@
 ﻿'use client';
 import { useState } from 'react';
-import LeadModal from '../components/LeadModal';
-
+import LeadModal from '@/components/LeadModal';
 export default function ShopList({ products }: { products: any[] }) {
     const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
 

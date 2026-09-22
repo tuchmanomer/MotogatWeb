@@ -246,7 +246,7 @@ export default function ContactPage() {
                 השאר פרטים ונחזור אליך בהקדם לייעוץ והרשמה.
             </p>
 
-            <Suspense fallback={<div style={{ textAlign: 'cen ter', color: '#94a3b8' }}>טוען טופס...</div>}>
+            <Suspense fallback={<div style={{ textAlign: 'center', color: '#94a3b8' }}>טוען טופס...</div>}>
                 <ContactFormContent />
             </Suspense>
 

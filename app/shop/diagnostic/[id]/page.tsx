@@ -5,11 +5,11 @@ import AddToCartButton from '@/components/AddToCartButton';
 export const revalidate = 0;
 export const dynamic = 'force-dynamic';
 
-export default async function ProductPage({
-    params,
-}: {
+interface ProductPageProps {
     params: Promise<{ id: string }>;
-}) {
+}
+
+export default async function ProductPage({ params }: ProductPageProps) {
     const { id } = await params;
 
     // שליפת כל המוצרים מה־Google Sheet
@@ -47,7 +47,7 @@ export default async function ProductPage({
                     justifyContent: 'space-between',
                     gap: '40px',
                     textAlign: 'right',
-                    boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)'
+                    boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)',
                 }}
             >
                 {/* תמונת המוצר מימין */}
@@ -102,7 +102,7 @@ export default async function ProductPage({
                                 textDecoration: 'none',
                                 fontWeight: 600,
                                 fontSize: '1rem',
-                                transition: 'all 0.2s ease'
+                                transition: 'all 0.2s ease',
                             }}
                         >
                             השארת פרטים והתעניינות במוצר

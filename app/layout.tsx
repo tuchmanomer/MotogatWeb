@@ -16,11 +16,11 @@ export default function RootLayout({
         <html lang="he" dir="rtl">
             <body style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', margin: 0, background: '#f8fafc', color: '#0f172a' }}>
 
-                {/* Header / Navigation ממומרז לחלוטין */}
+                {/* Header / Navigation רספונסיבי מותאם למובייל ולדסקטופ */}
                 <header style={{
                     backgroundColor: '#0f172a',
                     borderBottom: '1px solid #1e293b',
-                    padding: '14px 24px',
+                    padding: '12px 16px',
                     position: 'sticky',
                     top: 0,
                     zIndex: 1000,
@@ -33,14 +33,16 @@ export default function RootLayout({
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',
-                        width: '100%'
+                        width: '100%',
+                        flexWrap: 'wrap',
+                        gap: '12px'
                     }}>
 
-                        {/* צד ימין: הלוגו בתיבה לבנה (מוגדר עם flex: 1 כדי לאזן את הצד השני) */}
-                        <div style={{ display: 'flex', justifyContent: 'flex-start', flex: 1 }}>
+                        {/* צד ימין: הלוגו בתיבה לבנה */}
+                        <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
                             <Link href="/" style={{
                                 backgroundColor: '#ffffff',
-                                padding: '6px 12px',
+                                padding: '4px 10px',
                                 borderRadius: '8px',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -48,45 +50,38 @@ export default function RootLayout({
                                 boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
                                 width: 'fit-content'
                             }}>
-                                <img src="/logo.png" alt="MOTOGAT" style={{ height: '36px', width: 'auto', display: 'block' }} />
+                                <img src="/logo.png" alt="MOTOGAT" style={{ height: '30px', width: 'auto', display: 'block' }} />
                             </Link>
                         </div>
 
-                        {/* אמצע: כפתורי הניווט (ממורזים בדיוק במרכז) */}
-                        <nav style={{ display: 'flex', gap: '36px', fontSize: '16px', alignItems: 'center', justifyContent: 'center' }}>
-                            <Link href="/" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600 }}>בית</Link>
-                            <Link href="/courses" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600 }}>קורסים</Link>
-                            <Link href="/shop/diagnostic" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600 }}>חנות</Link>
+                        {/* אמצע: כפתורי הניווט (מותאמים למובייל עם רווחים גמישים) */}
+                        <nav style={{
+                            display: 'flex',
+                            gap: 'clamp(12px, 3vw, 36px)',
+                            fontSize: 'clamp(13px, 1.5vw, 16px)',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexWrap: 'wrap'
+                        }}>
+                            <Link href="/" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>בית</Link>
+                            <Link href="/courses" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>קורסים</Link>
+                            <Link href="/articles" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>מאמרים</Link>
+                            <Link href="/shop/diagnostic" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>חנות</Link>
                         </nav>
 
-                        {/* צד שמאל: עגלה ויצירת קשר (מוגדר עם flex: 1 ויישור לשמאל כדי לשמור על סימטריה) */}
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', flex: 1, gap: '12px', alignItems: 'center' }}>
-                            <Link href="/cart" style={{
-                                backgroundColor: '#1e293b',
-                                color: '#ffffff',
-                                border: '1px solid #334155',
-                                padding: '8px 14px',
-                                borderRadius: '6px',
-                                fontWeight: 600,
-                                fontSize: '14px',
-                                textDecoration: 'none',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '6px'
-                            }}>
-                                🛒 עגלה
-                            </Link>
-
+                        {/* צד שמאל: כפתור יצירת קשר בלבד (העגלה הוסרה לחלוטין) */}
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
                             <Link href="https://wa.me/972548933777" target="_blank" style={{
                                 backgroundColor: '#22c55e',
                                 color: '#000000',
                                 border: 'none',
-                                padding: '8px 16px',
+                                padding: '6px 14px',
                                 borderRadius: '6px',
                                 fontWeight: 600,
-                                fontSize: '14px',
+                                fontSize: '13px',
                                 textDecoration: 'none',
-                                display: 'inline-block'
+                                display: 'inline-block',
+                                whiteSpace: 'nowrap'
                             }}>
                                 ליצירת קשר
                             </Link>

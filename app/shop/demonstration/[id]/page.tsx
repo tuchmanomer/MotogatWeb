@@ -113,12 +113,11 @@ export default async function ProductDetailPage({
                             </Link>
 
                             <a
-                                href={whatsappUrl}
+                                href = "https://wa.me/972548933777"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
+                                    display: 'flex', 
                                     justifyContent: 'center',
                                     gap: '8px',
                                     textAlign: 'center',

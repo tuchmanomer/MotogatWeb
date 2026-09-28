@@ -1,6 +1,6 @@
 ﻿const SHEET_ID = '1DcifIAmklNYbvQzKineuiZiYySH6nXEX9P_gabXVnK4';
 
-export async function getSheetData(tabName: 'courses' | 'products') {
+export async function getSheetData(tabName: 'courses' | 'products' | 'articles') {
     try {
         const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${tabName}`;
         const res = await fetch(url, {

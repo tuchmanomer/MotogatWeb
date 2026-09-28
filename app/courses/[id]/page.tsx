@@ -136,7 +136,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
                     </Link>
 
                     <a
-                        href={whatsappUrl}
+                        href="https://wa.me/972548933777"
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{

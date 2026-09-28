@@ -66,6 +66,7 @@ export async function getShopProducts(sheetName: string = 'diagnostic') {
                 description: cleanCell(cols[2]) || '',
                 price: cleanCell(cols[3]) || '',
                 image: cleanCell(cols[4]) || '',
+                buy: cleanCell(cols[5]) || '', // <-- הוספת מיפוי לעמודה F עבור קישור הרכישה
             };
         }).filter(item => item.title !== '');
     } catch (error) {

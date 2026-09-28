@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { getShopProducts } from '@/lib/shopSheets';
 
 export default function BooksPage() {
@@ -26,7 +25,7 @@ export default function BooksPage() {
     return (
         <div className="container" style={{ padding: '120px 20px 80px', maxWidth: '1200px', margin: '0 auto', color: '#1e293b' }}>
             <h1 style={{ fontSize: '2.5rem', marginBottom: '10px', textAlign: 'center', fontWeight: 'bold', color: '#0f172a' }}>ספרי לימוד</h1>
-            <p style={{ textAlign: 'center', color: '#475569', fontSize: '1.1rem', marginBottom: '40px' }}>
+            <p className="pageSubtitle" style={{ textAlign: 'center', color: '#64748b', fontSize: '1.1rem', marginTop: '10px', marginBottom: '40px' }}>
                 עיין במבחר ספרי הלימוד המקצועיים שלנו.
             </p>
 
@@ -37,6 +36,7 @@ export default function BooksPage() {
                 <Link href="/shop/books" className="btnPrimary">ספרי לימוד</Link>
             </div>
 
+            {/* תוכן העמוד */}
             {loading ? (
                 <div style={{ textAlign: 'center', padding: '40px', color: '#94a3b8' }}>טוען ספרי לימוד...</div>
             ) : (
@@ -50,32 +50,19 @@ export default function BooksPage() {
     );
 }
 
-// קומפוננטת כרטיס מוצר מעוצבת עם מסגרת תמונה לבנה ושליפת תמונה גמישה מהשיטס
+// קומפוננטת כרטיס מוצר מעוצבת עם קישור רכישה דינמי מהאקסל וכפתור כחול
 function ProductCard({ product }: { product: any }) {
     const [isOpen, setIsOpen] = useState(false);
-    const router = useRouter();
 
-    // בדיקה גמישה למספר שמות אפשריים של שדה התמונה ב-Google Sheets (כדי שזה תמיד יעבוד)
+    // שליפה גמישה של תמונה ושל קישור רכישה מעמודת buy באקסל
     const productImage = product.image || product.img || product.imageUrl || product.picture;
+    const rawBuy = product.buy || product.BUY || product.buyUrl || product.buy_url || product.link;
+    const buyLink = rawBuy ? String(rawBuy).trim() : '';
 
-    const handleAddToCart = () => {
-        try {
-            const existingCart = JSON.parse(localStorage.getItem('cart') || '[]');
-            const index = existingCart.findIndex((item: any) => String(item.id) === String(product.id));
-
-            if (index > -1) {
-                existingCart[index].quantity = (existingCart[index].quantity || 1) + 1;
-            } else {
-                existingCart.push({ ...product, image: productImage, quantity: 1 });
-            }
-
-            localStorage.setItem('cart', JSON.stringify(existingCart));
-            window.dispatchEvent(new Event('cartUpdated'));
-            router.push('/cart');
-        } catch (error) {
-            console.error('Error adding to cart', error);
-        }
-    };
+    // ווידוא שהקישור מכיל פרוטוקול תקין (http/https) כדי למנוע בעיות ניווט
+    const formattedBuyLink = buyLink
+        ? (buyLink.startsWith('http://') || buyLink.startsWith('https://') ? buyLink : `https://${buyLink}`)
+        : '';
 
     return (
         <div style={{
@@ -154,23 +141,50 @@ function ProductCard({ product }: { product: any }) {
 
             <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '15px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', marginBottom: '12px' }}>
-                    <span style={{ fontWeight: 'bold', fontSize: '1.3rem', color: '#38bdf8', direction: 'ltr' }}>₪{product.price}</span>
-                    <button
-                        onClick={handleAddToCart}
-                        style={{
-                            backgroundColor: '#2563eb',
-                            color: '#ffffff',
-                            border: 'none',
-                            padding: '10px 18px',
-                            borderRadius: '10px',
-                            fontWeight: 600,
-                            fontSize: '0.95rem',
-                            cursor: 'pointer',
-                            transition: 'background-color 0.2s ease'
-                        }}
-                    >
-                        הוספה לעגלה 🛒
-                    </button>
+                    {/* המחיר מוקם בצד ימין בקו אחד עם שאר הטקסט */}
+                    <div>
+                        <span style={{ fontWeight: 'bold', fontSize: '1.3rem', color: '#38bdf8', direction: 'ltr', display: 'block', textAlign: 'right' }}>₪{product.price}</span>
+                        <span style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'block', marginTop: '2px', textAlign: 'right' }}>לא כולל מע&quot;מ</span>
+                    </div>
+
+                    {/* כפתור רכישה כחול מוקם בצד שמאל */}
+                    {formattedBuyLink ? (
+                        <a
+                            href={formattedBuyLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                                backgroundColor: '#0284c7',
+                                color: '#ffffff',
+                                border: 'none',
+                                padding: '10px 18px',
+                                borderRadius: '10px',
+                                fontWeight: 600,
+                                fontSize: '0.95rem',
+                                textDecoration: 'none',
+                                display: 'inline-block',
+                                transition: 'background-color 0.2s ease'
+                            }}
+                        >
+                            רכישה 🛒
+                        </a>
+                    ) : (
+                        <button
+                            disabled
+                            style={{
+                                backgroundColor: '#475569',
+                                color: '#94a3b8',
+                                border: 'none',
+                                padding: '10px 18px',
+                                borderRadius: '10px',
+                                fontWeight: 600,
+                                fontSize: '0.95rem',
+                                cursor: 'not-allowed'
+                            }}
+                        >
+                            לא זמין לרכישה
+                        </button>
+                    )}
                 </div>
 
                 <Link

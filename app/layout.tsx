@@ -1,5 +1,6 @@
 ﻿import './globals.css';
 import Link from 'next/link';
+import Script from 'next/script';
 import Footer from '@/components/Footer';
 
 export const metadata = {
@@ -16,7 +17,7 @@ export default function RootLayout({
         <html lang="he" dir="rtl">
             <body style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', margin: 0, background: '#f8fafc', color: '#0f172a' }}>
 
-                {/* Header / Navigation רספונסיבי מותאם למובייל ולדסקטופ */}
+                {/* Header / Navigation */}
                 <header style={{
                     backgroundColor: '#0f172a',
                     borderBottom: '1px solid #1e293b',
@@ -30,12 +31,11 @@ export default function RootLayout({
                     <div style={{
                         maxWidth: '1200px',
                         margin: '0 auto',
-                        display: 'flex',
-                        justifyContent: 'space-between',
+                        display: 'grid',
+                        gridTemplateColumns: 'auto 1fr auto',
                         alignItems: 'center',
                         width: '100%',
-                        flexWrap: 'wrap',
-                        gap: '12px'
+                        gap: '20px'
                     }}>
 
                         {/* צד ימין: הלוגו בתיבה לבנה */}
@@ -54,14 +54,13 @@ export default function RootLayout({
                             </Link>
                         </div>
 
-                        {/* אמצע: כפתורי הניווט (מותאמים למובייל עם רווחים גמישים) */}
+                        {/* אמצע: כפתורי הניווט ממורכזים לחלוטין */}
                         <nav style={{
                             display: 'flex',
-                            gap: 'clamp(12px, 3vw, 36px)',
-                            fontSize: 'clamp(13px, 1.5vw, 16px)',
+                            gap: 'clamp(16px, 3vw, 36px)',
+                            fontSize: 'clamp(14px, 1.5vw, 16px)',
                             alignItems: 'center',
-                            justifyContent: 'center',
-                            flexWrap: 'wrap'
+                            justifyContent: 'center'
                         }}>
                             <Link href="/" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>בית</Link>
                             <Link href="/courses" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>קורסים</Link>
@@ -69,7 +68,7 @@ export default function RootLayout({
                             <Link href="/shop/diagnostic" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>חנות</Link>
                         </nav>
 
-                        {/* צד שמאל: כפתור יצירת קשר בלבד (העגלה הוסרה לחלוטין) */}
+                        {/* צד שמאל: כפתור יצירת קשר */}
                         <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
                             <Link href="https://wa.me/972548933777" target="_blank" style={{
                                 backgroundColor: '#22c55e',
@@ -97,6 +96,12 @@ export default function RootLayout({
 
                 {/* Footer */}
                 <Footer />
+
+                {/* תוסף נגישות צף - נגיש לי */}
+                <Script
+                    src="https://www.nagish.li/accessibility/nagishli.js"
+                    strategy="afterInteractive"
+                />
 
             </body>
         </html>

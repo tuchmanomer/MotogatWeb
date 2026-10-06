@@ -40,6 +40,7 @@ export default function RootLayout({
                         display: none;
                     }
 
+                    /* התאמה נקייה וממורכזת למובייל */
                     @media (max-width: 768px) {
                         .desktop-header-nav {
                             flex-wrap: wrap;
@@ -58,15 +59,16 @@ export default function RootLayout({
                             display: none !important;
                         }
 
+                        /* השורה השנייה: ממורכזת לחלוטין במרכז המסך */
                         .desktop-links {
                             order: 3;
                             width: 100%;
-                            justify-content: space-around;
-                            padding: 12px 0 6px;
+                            justify-content: center;
+                            padding: 10px 0 4px;
                             border-top: 1px solid #1e293b;
                             font-size: 15px;
                             font-weight: 600;
-                            gap: 12px;
+                            gap: 24px;
                         }
                     }
                 `}</style>
@@ -104,7 +106,7 @@ export default function RootLayout({
                             בית
                         </Link>
 
-                        {/* אמצע: קישורי הניווט */}
+                        {/* אמצע: קישורי הניווט (ממורכזים בשורה השנייה במובייל) */}
                         <nav className="desktop-links">
                             <Link href="/" className="desktop-home-link" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>בית</Link>
                             <Link href="/courses" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>קורסים</Link>
@@ -141,10 +143,11 @@ export default function RootLayout({
                 {/* Footer */}
                 <Footer />
 
-                {/* תוסף נגישות יציב וחינמי (UserWay) שרץ ישירות ללא תלויות */}
+                {/* תוסף נגישות צף ממוקם בפינה התחתונה */}
                 <Script
                     src="https://cdn.userway.org/widget.js"
                     data-account="free-widget"
+                    data-position="bottom_right"
                     strategy="afterInteractive"
                 />
 

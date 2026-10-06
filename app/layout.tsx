@@ -15,8 +15,9 @@ export default function RootLayout({
 }) {
     return (
         <html lang="he" dir="rtl">
-            <head>
-                {/* CSS רספונסיבי מבודד - לא פוגע במחשב בכלל */}
+            <body style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', margin: 0, background: '#f8fafc', color: '#0f172a' }}>
+
+                {/* CSS רספונסיבי מותאם ומבודד */}
                 <style>{`
                     .desktop-header-nav {
                         display: flex;
@@ -35,26 +36,40 @@ export default function RootLayout({
                         justify-content: center;
                     }
 
-                    /* התאמה נקייה למובייל בלבד */
+                    .mobile-home-link {
+                        display: none;
+                    }
+
                     @media (max-width: 768px) {
                         .desktop-header-nav {
                             flex-wrap: wrap;
-                            gap: 10px;
+                            gap: 8px;
+                        }
+
+                        .mobile-home-link {
+                            display: inline-block;
+                            color: #e2e8f0;
+                            text-decoration: none;
+                            font-weight: 700;
+                            font-size: 15px;
+                        }
+
+                        .desktop-home-link {
+                            display: none !important;
                         }
 
                         .desktop-links {
                             order: 3;
                             width: 100%;
-                            justify-content: space-between;
-                            padding-top: 8px;
+                            justify-content: space-around;
+                            padding: 12px 0 6px;
                             border-top: 1px solid #1e293b;
-                            font-size: 14px;
-                            gap: 8px;
+                            font-size: 15px;
+                            font-weight: 600;
+                            gap: 12px;
                         }
                     }
                 `}</style>
-            </head>
-            <body style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', margin: 0, background: '#f8fafc', color: '#0f172a' }}>
 
                 {/* Header / Navigation */}
                 <header style={{
@@ -84,9 +99,14 @@ export default function RootLayout({
                             </Link>
                         </div>
 
-                        {/* אמצע: קישורי ניווט */}
+                        {/* במובייל בלבד: כפתור "בית" באמצע השורה העליונה */}
+                        <Link href="/" className="mobile-home-link">
+                            בית
+                        </Link>
+
+                        {/* אמצע: קישורי הניווט */}
                         <nav className="desktop-links">
-                            <Link href="/" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>בית</Link>
+                            <Link href="/" className="desktop-home-link" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>בית</Link>
                             <Link href="/courses" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>קורסים</Link>
                             <Link href="/articles" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>מאמרים</Link>
                             <Link href="/shop/diagnostic" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>חנות</Link>
@@ -121,9 +141,10 @@ export default function RootLayout({
                 {/* Footer */}
                 <Footer />
 
-                {/* תוסף נגישות צף - נגיש לי */}
+                {/* תוסף נגישות יציב וחינמי (UserWay) שרץ ישירות ללא תלויות */}
                 <Script
-                    src="https://www.nagish.li/accessibility/nagishli.js"
+                    src="https://cdn.userway.org/widget.js"
+                    data-account="free-widget"
                     strategy="afterInteractive"
                 />
 

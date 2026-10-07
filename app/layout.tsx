@@ -17,7 +17,7 @@ export default function RootLayout({
         <html lang="he" dir="rtl">
             <body style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', margin: 0, background: '#f8fafc', color: '#0f172a' }}>
 
-                {/* CSS רספונסיבי מותאם ומבודד */}
+                {/* CSS רספונסיבי מותאם ומבודד למובייל ולמיקום תוסף נגישות */}
                 <style>{`
                     .desktop-header-nav {
                         display: flex;
@@ -40,7 +40,7 @@ export default function RootLayout({
                         display: none;
                     }
 
-                    /* התאמה נקייה וממורכזת למובייל */
+                    /* התאמה מיוחדת למובייל - גריד של 3 עמודות שוות למרכוז מדויק של "מאמרים" */
                     @media (max-width: 768px) {
                         .desktop-header-nav {
                             flex-wrap: wrap;
@@ -59,17 +59,36 @@ export default function RootLayout({
                             display: none !important;
                         }
 
-                        /* השורה השנייה: ממורכזת לחלוטין במרכז המסך */
+                        /* 3 עמודות שוות: ימין - חנות, מרכז - מאמרים, שמאל - קורסים */
                         .desktop-links {
                             order: 3;
                             width: 100%;
-                            justify-content: center;
-                            padding: 10px 0 4px;
+                            display: grid !important;
+                            grid-template-columns: 1fr 1fr 1fr !important;
+                            align-items: center !important;
+                            padding: 10px 0 4px !important;
                             border-top: 1px solid #1e293b;
                             font-size: 15px;
                             font-weight: 600;
-                            gap: 24px;
+                            gap: 0 !important;
+                            text-align: center;
                         }
+                    }
+
+                    /* דריסה מוחלטת למיקום כפתור הנגישות בפינה התחתונה הימנית בלבד */
+                    #enable-accessibility-widget,
+                    .enable-accessibility-btn,
+                    #userwayAccessibilityIcon,
+                    div[class*="accessibility"],
+                    iframe[title*="Accessibility"],
+                    iframe[title*="accessibility"],
+                    #nagishli-btn {
+                        top: auto !important;
+                        bottom: 20px !important;
+                        right: 20px !important;
+                        left: auto !important;
+                        position: fixed !important;
+                        z-index: 99999 !important;
                     }
                 `}</style>
 
@@ -101,17 +120,17 @@ export default function RootLayout({
                             </Link>
                         </div>
 
-                        {/* במובייל בלבד: כפתור "בית" באמצע השורה העליונה */}
+                        {/* באמצע במובייל בלבד: כפתור "בית" */}
                         <Link href="/" className="mobile-home-link">
                             בית
                         </Link>
 
-                        {/* אמצע: קישורי הניווט (ממורכזים בשורה השנייה במובייל) */}
+                        {/* שורה שנייה במובייל - "מאמרים" ממוקם במרכז המדויק */}
                         <nav className="desktop-links">
                             <Link href="/" className="desktop-home-link" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>בית</Link>
-                            <Link href="/courses" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>קורסים</Link>
-                            <Link href="/articles" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>מאמרים</Link>
                             <Link href="/shop/diagnostic" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>חנות</Link>
+                            <Link href="/articles" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>מאמרים</Link>
+                            <Link href="/courses" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>קורסים</Link>
                         </nav>
 
                         {/* שמאל: כפתור יצירת קשר */}
@@ -143,11 +162,18 @@ export default function RootLayout({
                 {/* Footer */}
                 <Footer />
 
-                {/* תוסף נגישות צף ממוקם בפינה התחתונה */}
+                {/* הגדרות מיקום לסקריפט הנגישות בתחתית המסך מימין */}
+                <Script id="accessibility-config" strategy="beforeInteractive">
+                    {`
+                        window._enable_plugin_settings = {
+                            position: 'bottom-right'
+                        };
+                    `}
+                </Script>
+
+                {/* תוסף נגישות */}
                 <Script
-                    src="https://cdn.userway.org/widget.js"
-                    data-account="free-widget"
-                    data-position="bottom_right"
+                    src="https://cdn.enable.co.il/stdfiles/plugin_loader.js"
                     strategy="afterInteractive"
                 />
 

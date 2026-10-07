@@ -178,7 +178,7 @@ export default function Home() {
 
                         <h2 style={{ fontSize: '2.3rem', fontWeight: 700, color: '#0f172a', marginTop: '8px' }}>
 
-                            כשאיכות וניסיון נפגשים בעולם הרכב
+                            כשידע וניסיון נפגשים בעולם הרכב
 
                         </h2>
 

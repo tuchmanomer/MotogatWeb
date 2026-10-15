@@ -222,7 +222,8 @@ export default function Home() {
 
                     textAlign: 'center',
 
-                    padding: '100px 20px 80px',
+                    padding: '100px 20px 30px',
+                    boxSizing: 'border-box',
 
                     backgroundColor: '#f8fafc',
 
@@ -342,7 +343,7 @@ export default function Home() {
 
             {/* About Section */}
 
-            <section id="about-section" style={{ padding: '90px 20px', background: '#f8fafc', color: '#334155' }}>
+            <section id="about-section" style={{ padding: '40px 20px 30px', background: '#f8fafc', color: '#334155' }}>
                 <div className="container" style={{ maxWidth: '1100px', margin: '0 auto' }}>
                     <div style={{ textAlign: 'center', marginBottom: '40px' }}>
                         <span style={{ color: '#2563eb', fontSize: '0.9rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px' }}>
@@ -417,7 +418,7 @@ export default function Home() {
 
             {/* Services Section */}
 
-            <section id="services-section" className="services" style={{ padding: '90px 20px 40px', background: '#f8fafc' }}>
+            <section id="services-section" className="services" style={{ padding: '40px 20px 40px', background: '#f8fafc' }}>
 
                 <div className="container">
 

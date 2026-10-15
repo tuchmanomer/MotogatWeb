@@ -4,6 +4,7 @@ import Script from 'next/script';
 import Footer from '@/components/Footer';
 import CartIcon from '@/components/CartIcon';
 import AccessibilityButton from '@/components/AccessibilityButton';
+import MobileMenu from '@/components/MobileMenu';
 
 export const metadata = {
     title: 'מוטו גת - המכללה לעולם הרכב | MOTOGAT',
@@ -16,7 +17,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="he" dir="rtl">
+        <html lang="he" dir="rtl" data-scroll-behavior="smooth">
             <body style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', margin: 0, background: '#f8fafc', color: '#0f172a' }}>
 
                 {/* CSS רספונסיבי מותאם למובייל ולמיקום כפתור הנגישות בפינה התחתונה הימנית */}
@@ -45,10 +46,6 @@ export default function RootLayout({
                         font-size: 16px;
                         align-items: center;
                         justify-content: center;
-                    }
-
-                    .mobile-home-link {
-                        display: none;
                     }
 
                     /* אייקון עגלת קניות */
@@ -89,55 +86,75 @@ export default function RootLayout({
                     }
 
                     /* התאמה למובייל: 3 עמודות שוות בשורה השנייה למרכוז מדויק של "מאמרים" */
+                    /* כפתור התפריט ופאנל התפריט - מוצגים רק במובייל */
+                    .mobile-menu-btn {
+                        display: none;
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 10px;
+                        border: 1px solid #334155;
+                        background: transparent;
+                        color: #e2e8f0;
+                        align-items: center;
+                        justify-content: center;
+                        cursor: pointer;
+                    }
+
+                    .mobile-menu-panel {
+                        position: absolute;
+                        top: 100%;
+                        left: 0;
+                        right: 0;
+                        background: #0f172a;
+                        border-top: 1px solid #1e293b;
+                        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+                        padding: 8px 16px 16px;
+                        display: flex;
+                        flex-direction: column;
+                        animation: mobileMenuIn 0.2s ease;
+                    }
+
+                    @keyframes mobileMenuIn {
+                        from { opacity: 0; transform: translateY(-6px); }
+                        to { opacity: 1; transform: none; }
+                    }
+
+                    .mobile-menu-panel a {
+                        color: #e2e8f0;
+                        text-decoration: none;
+                        font-size: 17px;
+                        font-weight: 600;
+                        padding: 14px 6px;
+                        border-bottom: 1px solid #1e293b;
+                    }
+
+                    .mobile-menu-panel a:last-child {
+                        border-bottom: none;
+                    }
+
+                    .mobile-menu-panel a.is-active {
+                        color: #38bdf8;
+                    }
+
+                    /* מובייל: שורה אחת - לוגו מימין, משמאל עגלה + יצירת קשר + כפתור תפריט */
                     @media (max-width: 768px) {
-                        /* שורה 1: לוגו | "בית" במרכז המדויק | עגלה + יצירת קשר. שורה 2: הקישורים לכל הרוחב */
                         .desktop-header-nav {
-                            display: grid;
-                            grid-template-columns: 1fr auto 1fr;
-                            row-gap: 8px;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
                         }
 
-                        .desktop-header-nav > :first-child {
-                            grid-row: 1;
-                            grid-column: 1;
-                        }
-
-                        .desktop-header-nav > .mobile-home-link {
-                            grid-row: 1;
-                            grid-column: 2;
-                        }
-
-                        .desktop-header-nav > :last-child {
-                            grid-row: 1;
-                            grid-column: 3;
-                        }
-
-                        .mobile-home-link {
-                            display: inline-block;
-                            color: #e2e8f0;
-                            text-decoration: none;
-                            font-weight: 700;
-                            font-size: 15px;
-                        }
-
-                        .desktop-home-link {
+                        .desktop-links {
                             display: none !important;
                         }
 
-                        /* 3 עמודות: ימין - חנות, מרכז - מאמרים, שמאל - קורסים */
-                        .desktop-links {
-                            grid-row: 2;
-                            grid-column: 1 / -1;
-                            width: 100%;
-                            display: grid !important;
-                            grid-template-columns: 1fr 1fr 1fr !important;
-                            align-items: center !important;
-                            padding: 10px 0 4px !important;
-                            border-top: 1px solid #1e293b;
-                            font-size: 15px;
-                            font-weight: 600;
-                            gap: 0 !important;
-                            text-align: center;
+                        .mobile-menu-btn {
+                            display: flex;
+                        }
+
+                        .header-contact {
+                            padding: 7px 12px !important;
+                            font-size: 13px !important;
                         }
                     }
 
@@ -277,12 +294,7 @@ export default function RootLayout({
                             </Link>
                         </div>
 
-                        {/* באמצע במובייל בלבד: כפתור "בית" */}
-                        <Link href="/" className="mobile-home-link">
-                            בית
-                        </Link>
-
-                        {/* שורה שנייה במובייל - "מאמרים" במרכז המדויק מתחת ל"בית" */}
+                        {/* מרכז: קישורי הניווט (במחשב בלבד - במובייל דרך תפריט ההמבורגר) */}
                         <nav className="desktop-links" aria-label="ניווט ראשי">
                             <Link href="/" className="desktop-home-link" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>בית</Link>
                             <Link href="/shop/diagnostic" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>חנות</Link>
@@ -290,7 +302,7 @@ export default function RootLayout({
                             <Link href="/courses" style={{ color: '#e2e8f0', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>קורסים</Link>
                         </nav>
 
-                        {/* שמאל: עגלת קניות + כפתור יצירת קשר */}
+                        {/* שמאל: עגלת קניות + כפתור יצירת קשר + תפריט (במובייל) */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                             <CartIcon />
 
@@ -299,6 +311,7 @@ export default function RootLayout({
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label="ליצירת קשר בוואטסאפ (נפתח בחלון חדש)"
+                                className="header-contact"
                                 style={{
                                 backgroundColor: '#22c55e',
                                 color: '#000000',
@@ -313,6 +326,8 @@ export default function RootLayout({
                             }}>
                                 ליצירת קשר
                             </Link>
+
+                            <MobileMenu />
                         </div>
 
                     </div>

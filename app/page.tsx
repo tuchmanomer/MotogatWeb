@@ -343,81 +343,74 @@ export default function Home() {
             {/* About Section */}
 
             <section id="about-section" style={{ padding: '90px 20px', background: '#f8fafc', color: '#334155' }}>
-
                 <div className="container" style={{ maxWidth: '1100px', margin: '0 auto' }}>
-
-                    <div style={{ textAlign: 'center', marginBottom: '50px' }}>
-
+                    <div style={{ textAlign: 'center', marginBottom: '40px' }}>
                         <span style={{ color: '#2563eb', fontSize: '0.9rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px' }}>
-
-                            המומחיות שלנו
-
+                            מכללת מוטו-גת
                         </span>
-
                         <h2 style={{ fontSize: '2.3rem', fontWeight: 700, color: '#0f172a', marginTop: '8px' }}>
-
                             כשידע וניסיון נפגשים בעולם הרכב
-
                         </h2>
-
                     </div>
-
-
 
                     <div style={{
-
                         background: '#ffffff',
-
                         padding: '40px',
-
                         borderRadius: '24px',
-
                         border: '1px solid #e2e8f0',
-
                         lineHeight: 1.8,
-
                         fontSize: '1.05rem',
-
                         boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.02)'
-
                     }}>
-
-                        <p style={{ marginBottom: '20px', color: '#334155' }}>
-
-                            מכללת מוטו גת מכשירה את העובדים בענף הרכב ברמות השונות ועל מערכות הרכב השונות, החל מיסודות ועד לרמת אבחון ושיפוץ מכלולים, הן בנושאים המכניים והן בנושאי האלקטרוניקה ומערכות בקרה ותקשורת מתקדמות.
-
+                        <h3 style={{ color: '#0f172a', fontSize: '1.2rem', fontWeight: 700, marginBottom: '10px' }}>
+                            כשידע מניע את עולם הרכב
+                        </h3>
+                        <p style={{ marginBottom: '16px', color: '#334155' }}>
+                            מכללת מוטו-גת היא מרכז מוביל להכשרה, הדרכה וייעוץ טכנולוגי בענף הרכב בישראל, עם ניסיון של למעלה מ-30 שנה בהכשרת אנשי מקצוע ובהובלת מערכי ההדרכה של יבואני רכב פרטי וכבד.
+                        </p>
+                        <p style={{ marginBottom: '16px', color: '#334155' }}>
+                            המכללה מתמחה בהכשרה מקיפה, מיסודות הרכב ועד לרמות המתקדמות ביותר של אבחון תקלות בתחומי המכונאות, הדיאגנוסטיקה, החשמל, מערכות הבקרה והתקשורת המתקדמות.
+                        </p>
+                        <p style={{ marginBottom: '0', color: '#334155' }}>
+                            ההכשרות משלבות ידע תיאורטי מעמיק עם יישום מעשי, תוך היכרות מעמיקה עם הטכנולוגיות המתחדשות והמערכות המתקדמות ביותר בענף הרכב.
                         </p>
 
-                        <p style={{ marginBottom: '20px', color: '#334155' }}>
-
-                            מכללת מוטו גת הינה מערך ההדרכה של מספר יבואני רכב פרטי ורכב כבד בישראל מעל 30 שנה. בנוסף, מערך ההדרכה מבוסס על תפיסת <strong>&quot;Custom made&quot;</strong>, התאמה טכנית לצרכי הלקוח.
-
-                        </p>
-
-                        <p style={{ marginBottom: '20px', color: '#334155' }}>
-
-                            מכללת מוטו-גת הינה מכללה מוכרת ע&quot;י משרד העבודה ומשרד התחבורה. בנוסף, המכללה נבחרה שוב ושוב לבנות מערכי שיעור ולהכשיר את הגורמים השונים במערכת הביטחון במספר פרויקטים שונים, ומספקת שירותי ייעוץ לחברות וסטארטאפים טכנולוגים בענף הרכב.
-
-                        </p>
-
-
-
-                        <div style={{ marginTop: '30px', paddingTop: '25px', borderTop: '1px solid #e2e8f0' }}>
-
-                            <h4 style={{ color: '#0f172a', fontSize: '1.1rem', marginBottom: '12px' }}>בין לקוחותינו המובילים:</h4>
-
-                            <p style={{ color: '#64748b', fontSize: '0.95rem' }}>
-
-                                משרד הביטחון, משרד החינוך, משרד העבודה, סוזוקי , דיפאל , LEXUS, טויוטה , MAN משאיות ואוטובוסים, קבוצת סקניה, קבוצת כלמוביל, IVECO, MAXUS, משטרת ישראל ועוד רבים...
-
+                        <div style={{ marginTop: '32px' }}>
+                            <h3 style={{ color: '#0f172a', fontSize: '1.2rem', fontWeight: 700, marginBottom: '10px' }}>
+                                היתרון שלנו הוא התאמה מדויקת לצורך.
+                            </h3>
+                            <p style={{ marginBottom: '16px', color: '#334155' }}>
+                                תפיסת ה-<strong>Custom Made</strong> של מכללת מוטו-גת מאפשרת לבנות לכל לקוח מערך הכשרה ייעודי, המותאם לטכנולוגיה, לאתגרים המקצועיים ולדרישות בשטח.
                             </p>
-
+                            <p style={{ marginBottom: '0', color: '#334155' }}>
+                                המכללה מוכרת על ידי משרד העבודה ומשרד התחבורה, נבחרה לפתח מערכי לימוד ולהכשיר גורמים במערכת הביטחון במסגרת פרויקטים ייעודיים ומעניקה שירותי ייעוץ לחברות ולסטארטאפים טכנולוגיים בענף.
+                            </p>
                         </div>
 
+                        <div style={{ marginTop: '32px' }}>
+                            <h3 style={{ color: '#0f172a', fontSize: '1.2rem', fontWeight: 700, marginBottom: '10px' }}>
+                                הניסיון שלנו. הסטנדרטים שלנו. האמון של המובילים בענף.
+                            </h3>
+                            <p style={{ marginBottom: '0', color: '#334155' }}>
+                                בין לקוחותינו נמנים משרד הביטחון, משרד החינוך, משרד העבודה, משטרת ישראל, סוזוקי, דיפאל, LEXUS, טויוטה, MAN משאיות ואוטובוסים, קבוצת סקניה, קבוצת כלמוביל, IVECO, MAXUS וגופים מובילים נוספים.
+                            </p>
+                        </div>
+
+                        <div style={{ marginTop: '32px' }}>
+                            <h3 style={{ color: '#0f172a', fontSize: '1.2rem', fontWeight: 700, marginBottom: '10px' }}>
+                                אז, בואו נדבר על ההכשרה שלך
+                            </h3>
+                            <p style={{ marginBottom: '16px', color: '#334155' }}>
+                                כל ארגון מתמודד עם אתגרים מקצועיים וטכנולוגיים משלו.
+                                <br />
+                                אנחנו כאן כדי להקשיב, להבין את הצרכים שלך ולבנות יחד פתרון הדרכה מדויק, מעשי ומותאם לך אישית.
+                            </p>
+                            <p style={{ marginBottom: '0', color: '#0f172a', fontWeight: 600 }}>
+                                צור איתנו קשר, ספר לנו לאן אתה רוצה להגיע, אנחנו כבר נדע להניע את הגלגלים הנכונים
+                            </p>
+                        </div>
                     </div>
-
                 </div>
-
             </section>
 
 

@@ -3,6 +3,144 @@
 
 
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import TeachersPanel from '@/components/TeachersPanel';
+
+// עיצוב דינאמי לכרטיסי "תחומי ההתמחות" ו"הקטלוג המקצועי" - באותו סגנון של כרטיסי הצוות
+const cardStyles = `
+    .serviceCard, .catalogCard {
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, opacity 0.6s ease;
+    }
+    .serviceCard:hover, .catalogCard:hover {
+        transform: translateY(-6px);
+        border-color: #bfdbfe !important;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 20px 40px -12px rgba(37, 99, 235, 0.25) !important;
+    }
+    .serviceCard img, .catalogCard img {
+        transition: transform 0.5s ease;
+    }
+    .serviceCard:hover img, .catalogCard:hover img {
+        transform: scale(1.06);
+    }
+
+    /* כל כרטיס הקטלוג לחיץ - הקישור של הכפתור נמתח על כל הכרטיס */
+    .stretched-link::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+    }
+    .catalogCard:hover .stretched-link {
+        background: #1d4ed8 !important;
+    }
+
+    /* כניסה עדינה בגלילה - רק כש-JavaScript פעיל, כדי שהתוכן תמיד יוצג */
+    .reveal-ready .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    .reveal-ready .reveal.is-visible {
+        opacity: 1;
+        transform: none;
+    }
+    .reveal-ready .reveal.is-visible:hover {
+        transform: translateY(-6px);
+    }
+
+    /* פס הלוגואים של השותפים */
+    .brands-panel {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 24px;
+        padding: 28px 0 32px;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px -8px rgba(15, 23, 42, 0.10);
+        overflow: hidden;
+    }
+    .brands-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 26px;
+        padding: 0 20px;
+    }
+    .brands-title {
+        margin: 0;
+        color: #475569;
+        font-size: 0.95rem;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+    }
+    .brands-toggle {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #1d4ed8;
+        font-size: 0.7rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    /* הלוגואים נעלמים בהדרגה בקצוות */
+    .brands-viewport {
+        direction: ltr;
+        overflow: hidden;
+        -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+        mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+    }
+    @keyframes brandsScroll {
+        from { transform: translateX(0); }
+        to { transform: translateX(-50%); }
+    }
+    .brands-track {
+        display: flex;
+        align-items: center;
+        width: max-content;
+        animation: brandsScroll 40s linear infinite;
+    }
+    .brands-panel:hover .brands-track,
+    .brands-track.is-paused {
+        animation-play-state: paused;
+    }
+    .brand-logo {
+        flex-shrink: 0;
+        width: 170px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 24px;
+        box-sizing: border-box;
+    }
+    .brand-logo img {
+        max-height: 42px;
+        max-width: 120px;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+    .brand-logo:hover img {
+        transform: scale(1.08);
+    }
+    @media (max-width: 640px) {
+        .brands-title { font-size: 0.85rem; letter-spacing: 0.5px; text-align: center; }
+        .brand-logo { width: 130px; padding: 0 16px; }
+        .brand-logo img { max-width: 96px; max-height: 34px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .brands-track { animation: none; flex-wrap: wrap; justify-content: center; width: auto; }
+        .brands-toggle { display: none; }
+        .serviceCard:hover, .catalogCard:hover,
+        .serviceCard:hover img, .catalogCard:hover img { transform: none; }
+        .reveal-ready .reveal { opacity: 1; transform: none; }
+    }
+`;
 
 
 
@@ -28,9 +166,41 @@ const brands = [
 
 export default function Home() {
 
+    // עצירה ידנית של פס הלוגואים (נגישות: אפשרות לעצור תוכן שזז לבד)
+    const [brandsPaused, setBrandsPaused] = useState(false);
+
+    // הכרטיסים נכנסים בעדינות כשגוללים אליהם (אחד אחרי השני)
+    useEffect(() => {
+        const cards = Array.from(document.querySelectorAll<HTMLElement>('.reveal'));
+        if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        document.documentElement.classList.add('reveal-ready');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                const el = entry.target as HTMLElement;
+                // כרטיסי ההתמחות עטופים בקישור - לכן מחפשים את הרשת שמכילה אותם
+                const group = el.closest('.servicesGrid') || el.parentElement;
+                const siblings = Array.from(group?.querySelectorAll('.reveal') || []);
+                el.style.transitionDelay = `${Math.max(0, siblings.indexOf(el)) * 0.1}s`;
+                el.classList.add('is-visible');
+                // אחרי הכניסה מבטלים את העיכוב, כדי שאפקט ה-hover יגיב מיד
+                setTimeout(() => { el.style.transitionDelay = ''; }, 1000);
+                observer.unobserve(el);
+            });
+        }, { threshold: 0.15 });
+
+        cards.forEach((card) => observer.observe(card));
+        return () => {
+            observer.disconnect();
+            document.documentElement.classList.remove('reveal-ready');
+        };
+    }, []);
+
     return (
 
         <div>
+            <style>{cardStyles}</style>
 
             {/* Hero Section - עודכן לתמונת הפתיחה המקומית שלך */}
 
@@ -64,7 +234,6 @@ export default function Home() {
 
                     backgroundRepeat: 'no-repeat',
 
-                    borderBottom: '1px solid #e2e8f0',
 
                 }}
 
@@ -84,75 +253,84 @@ export default function Home() {
 
                     <div className="heroCTA" style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
 
-                        <Link href="/courses" className="btnPrimary">
+                        {/* קפיצה לאזורים בעמוד הבית */}
+                        <a href="#services-section" className="btnSecondary">
+                            תחומי התמחות
+                        </a>
 
-                            לרשימת הקורסים
+                        <a href="#staff-section" className="btnPrimary">
+                            צוות המכללה
+                        </a>
 
-                        </Link>
-
-                        <Link href="/shop/diagnostic" className="btnSecondary">
-
-                            ציוד אבחון
-
-                        </Link>
-
-                        <Link href="/shop/demonstration" className="btnSecondary">
-
-                            אמצעי המחשה
-
-                        </Link>
+                        <a href="#catalog-section" className="btnSecondary">
+                            קטלוג מקצועי
+                        </a>
 
                     </div>
 
 
 
+                    {/* פס אמינות: 3 אריחים נפרדים עם אייקון. במחשב בשורה אחת, בטלפון אחד מתחת לשני */}
                     <div style={{
-
-                        display: 'flex',
-
-                        justifyContent: 'center',
-
-                        alignItems: 'center',
-
-                        flexWrap: 'wrap',
-
-                        gap: '40px',
-
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+                        gap: '14px',
                         marginTop: '50px',
-
-                        padding: '20px',
-
-                        background: '#ffffff',
-
-                        borderRadius: '16px',
-
+                        padding: '14px',
+                        background: 'rgba(255, 255, 255, 0.92)',
+                        backdropFilter: 'blur(8px)',
+                        borderRadius: '20px',
                         border: '1px solid #e2e8f0',
-
-                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)'
-
+                        boxShadow: '0 10px 30px -10px rgba(15, 23, 42, 0.18)'
                     }}>
-
-                        <div style={{ color: '#334155', fontSize: '1.05rem', fontWeight: 600 }}>
-
-                            מכללה מוכרת ע&quot;י משרד העבודה ומשרד התחבורה
-
-                        </div>
-
-                        <div style={{ width: '1px', height: '24px', background: '#cbd5e1' }} className="divider"></div>
-
-                        <div style={{ color: '#334155', fontSize: '1.05rem', fontWeight: 600 }}>
-
-                            מרכז ההדרכה הגדול והמקצועי בישראל
-
-                        </div>
-
-                        <div style={{ width: '1px', height: '24px', background: '#cbd5e1' }} className="divider"></div>
-
-                        <div style={{ color: '#334155', fontSize: '1.05rem', fontWeight: 600 }}>
-
-                            ייבואן רשמי של TOPDON בישראל
-
-                        </div>
+                        {[
+                            {
+                                text: 'מכללה מוכרת ע"י משרד העבודה ומשרד התחבורה',
+                                icon: <><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><polyline points="9 12 11 14 15 10" /></>
+                            },
+                            {
+                                text: 'מרכז ההדרכה הגדול והמקצועי בישראל',
+                                icon: <><path d="M22 10 12 5 2 10l10 5 10-5z" /><path d="M6 12v5c3 2 9 2 12 0v-5" /></>
+                            },
+                            {
+                                text: 'ייבואן רשמי של TOPDON בישראל',
+                                icon: <><circle cx="12" cy="8" r="6" /><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" /></>
+                            },
+                        ].map((item) => (
+                            <div
+                                key={item.text}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '12px',
+                                    padding: '14px 16px',
+                                    background: '#f8fafc',
+                                    border: '1px solid #e2e8f0',
+                                    borderRadius: '14px',
+                                    textAlign: 'center'
+                                }}
+                            >
+                                <span style={{
+                                    flexShrink: 0,
+                                    width: '42px',
+                                    height: '42px',
+                                    borderRadius: '12px',
+                                    background: '#eff6ff',
+                                    color: '#2563eb',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}>
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                        {item.icon}
+                                    </svg>
+                                </span>
+                                <span style={{ color: '#0f172a', fontSize: '1rem', fontWeight: 600, lineHeight: 1.4 }}>
+                                    {item.text}
+                                </span>
+                            </div>
+                        ))}
 
                     </div>
 
@@ -164,7 +342,7 @@ export default function Home() {
 
             {/* About Section */}
 
-            <section id="about-section" style={{ padding: '90px 20px', background: '#ffffff', color: '#334155', borderBottom: '1px solid #e2e8f0' }}>
+            <section id="about-section" style={{ padding: '90px 20px', background: '#f8fafc', color: '#334155' }}>
 
                 <div className="container" style={{ maxWidth: '1100px', margin: '0 auto' }}>
 
@@ -188,7 +366,7 @@ export default function Home() {
 
                     <div style={{
 
-                        background: '#f8fafc',
+                        background: '#ffffff',
 
                         padding: '40px',
 
@@ -212,7 +390,7 @@ export default function Home() {
 
                         <p style={{ marginBottom: '20px', color: '#334155' }}>
 
-                            מכללת מוטו גת הינה מערך ההדרכה של מספר יבואני רכב פרטי ורכב כבד בישראל מעל 25 שנה. בנוסף, מערך ההדרכה מבוסס על תפיסת <strong>&quot;Custom made&quot;</strong>, התאמה טכנית לצרכי הלקוח.
+                            מכללת מוטו גת הינה מערך ההדרכה של מספר יבואני רכב פרטי ורכב כבד בישראל מעל 30 שנה. בנוסף, מערך ההדרכה מבוסס על תפיסת <strong>&quot;Custom made&quot;</strong>, התאמה טכנית לצרכי הלקוח.
 
                         </p>
 
@@ -274,13 +452,13 @@ export default function Home() {
 
                         <Link href="/courses" style={{ textDecoration: 'none' }}>
 
-                            <div className="serviceCard" style={{ background: '#ffffff', borderRadius: '20px', border: '1px solid #e2e8f0', overflow: 'hidden', cursor: 'pointer', height: '100%', transition: 'transform 0.2s', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+                            <div className="serviceCard reveal" style={{ background: '#ffffff', borderRadius: '20px', border: '1px solid #e2e8f0', overflow: 'hidden', cursor: 'pointer', height: '100%', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
 
                                 <img
 
                                     src="/images/pics/workshop.jpeg"
 
-                                    alt="תמונה"
+                                    alt="הכשרות טכנולוגיות ודיאגנוסטיקה"
 
                                     style={{
 
@@ -318,7 +496,7 @@ export default function Home() {
 
                         <Link href="/courses" style={{ textDecoration: 'none' }}>
 
-                            <div className="serviceCard" style={{ background: '#ffffff', borderRadius: '20px', border: '1px solid #e2e8f0', overflow: 'hidden', cursor: 'pointer', height: '100%', transition: 'transform 0.2s', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+                            <div className="serviceCard reveal" style={{ background: '#ffffff', borderRadius: '20px', border: '1px solid #e2e8f0', overflow: 'hidden', cursor: 'pointer', height: '100%', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
 
                                 <img
 
@@ -362,13 +540,13 @@ export default function Home() {
 
                         <Link href="/courses" style={{ textDecoration: 'none' }}>
 
-                            <div className="serviceCard" style={{ background: '#ffffff', borderRadius: '20px', border: '1px solid #e2e8f0', overflow: 'hidden', cursor: 'pointer', height: '100%', transition: 'transform 0.2s', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+                            <div className="serviceCard reveal" style={{ background: '#ffffff', borderRadius: '20px', border: '1px solid #e2e8f0', overflow: 'hidden', cursor: 'pointer', height: '100%', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
 
                                 <img
 
                                     src="/images/pics/class.jpeg"
 
-                                    alt="תמונה"
+                                    alt="הסמכות וייעוץ מקצועי"
 
                                     style={{
 
@@ -406,7 +584,7 @@ export default function Home() {
 
                         <Link href="/courses" style={{ textDecoration: 'none' }}>
 
-                            <div className="serviceCard" style={{ background: '#ffffff', borderRadius: '20px', border: '1px solid #e2e8f0', overflow: 'hidden', cursor: 'pointer', height: '100%', transition: 'transform 0.2s', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+                            <div className="serviceCard reveal" style={{ background: '#ffffff', borderRadius: '20px', border: '1px solid #e2e8f0', overflow: 'hidden', cursor: 'pointer', height: '100%', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
 
                                 <img
 
@@ -452,9 +630,18 @@ export default function Home() {
 
 
 
+            {/* פאנל צוות המורים - נטען מלשונית STUFF בגיליון */}
+            <TeachersPanel
+                id="staff-section"
+                group="management"
+                title="הנהלת המכללה"
+                subtitle="האנשים שמובילים את מוטו-גת"
+            />
+            <TeachersPanel group="teachers" />
+
             {/* Shop Categories Section */}
 
-            <section id="catalog-section" style={{ padding: '80px 20px', background: '#ffffff', borderTop: '1px solid #e2e8f0' }}>
+            <section id="catalog-section" style={{ padding: '80px 20px', background: '#f8fafc' }}>
 
                 <div className="container" style={{ maxWidth: '1200px', margin: '0 auto' }}>
 
@@ -486,7 +673,7 @@ export default function Home() {
 
                         {/* מוצרי אבחון */}
 
-                        <div style={{ background: '#f8fafc', borderRadius: '20px', border: '1px solid #e2e8f0', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.02)' }}>
+                        <div className="catalogCard reveal" style={{ position: 'relative', background: '#ffffff', borderRadius: '20px', border: '1px solid #e2e8f0', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.02)' }}>
 
                             <img src="/images/pics/diagnostic.jpg" alt="מוצרי אבחון" style={{ width: '100%', height: '220px', objectFit: 'cover' }} />
 
@@ -500,7 +687,7 @@ export default function Home() {
 
                                 </p>
 
-                                <Link href="/shop/diagnostic" style={{ display: 'inline-block', textAlign: 'center', background: '#2563eb', color: '#fff', padding: '12px 20px', borderRadius: '10px', textDecoration: 'none', fontWeight: 600 }}>
+                                <Link href="/shop/diagnostic" className="stretched-link" style={{ display: 'inline-block', textAlign: 'center', background: '#2563eb', color: '#fff', padding: '12px 20px', borderRadius: '10px', textDecoration: 'none', fontWeight: 600 }}>
 
                                     צפה במוצרי האבחון
 
@@ -514,7 +701,7 @@ export default function Home() {
 
                         {/* ספרים וספרות טכנית */}
 
-                        <div style={{ background: '#f8fafc', borderRadius: '20px', border: '1px solid #e2e8f0', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.02)' }}>
+                        <div className="catalogCard reveal" style={{ position: 'relative', background: '#ffffff', borderRadius: '20px', border: '1px solid #e2e8f0', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.02)' }}>
 
                             <img src="/images/pics/books.jpeg" alt="ספרים" style={{ width: '100%', height: '220px', objectFit: 'cover' }} />
 
@@ -528,7 +715,7 @@ export default function Home() {
 
                                 </p>
 
-                                <Link href="/shop/books" style={{ display: 'inline-block', textAlign: 'center', background: '#2563eb', color: '#fff', padding: '12px 20px', borderRadius: '10px', textDecoration: 'none', fontWeight: 600 }}>
+                                <Link href="/shop/books" className="stretched-link" style={{ display: 'inline-block', textAlign: 'center', background: '#2563eb', color: '#fff', padding: '12px 20px', borderRadius: '10px', textDecoration: 'none', fontWeight: 600 }}>
 
                                     צפה בספרים המקצועיים
 
@@ -542,7 +729,7 @@ export default function Home() {
 
                         {/* אמצעי המחשה */}
 
-                        <div style={{ background: '#f8fafc', borderRadius: '20px', border: '1px solid #e2e8f0', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.02)' }}>
+                        <div className="catalogCard reveal" style={{ position: 'relative', background: '#ffffff', borderRadius: '20px', border: '1px solid #e2e8f0', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.02)' }}>
 
                             <img src="/images/pics/autotech.jpeg" alt="אמצעי המחשה" style={{ width: '100%', height: '220px', objectFit: 'cover' }} />
 
@@ -556,7 +743,7 @@ export default function Home() {
 
                                 </p>
 
-                                <Link href="/shop/demonstration" style={{ display: 'inline-block', textAlign: 'center', background: '#2563eb', color: '#fff', padding: '12px 20px', borderRadius: '10px', textDecoration: 'none', fontWeight: 600 }}>
+                                <Link href="/shop/demonstration" className="stretched-link" style={{ display: 'inline-block', textAlign: 'center', background: '#2563eb', color: '#fff', padding: '12px 20px', borderRadius: '10px', textDecoration: 'none', fontWeight: 600 }}>
 
                                     צפה באמצעי ההמחשה
 
@@ -574,110 +761,34 @@ export default function Home() {
 
 
 
-            {/* פאנל היצרנים והשותפים */}
-
-            <section style={{
-
-                padding: '50px 20px',
-
-                background: '#f1f5f9',
-
-                borderTop: '1px solid #e2e8f0',
-
-                borderBottom: '1px solid #e2e8f0',
-
-                margin: '0'
-
-            }}>
-
-                <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', textAlign: 'center' }}>
-
-                    <h3 style={{
-
-                        color: '#64748b',
-
-                        fontSize: '0.95rem',
-
-                        letterSpacing: '1.5px',
-
-                        marginBottom: '35px',
-
-                        fontWeight: 600,
-
-                        textTransform: 'uppercase'
-
-                    }}>
-
-                        שותפים, יצרנים ולקוחות מובילים בתעשייה
-
-                    </h3>
-
-
-
-                    <div style={{
-
-                        display: 'flex',
-
-                        justifyContent: 'center',
-
-                        alignItems: 'center',
-
-                        flexWrap: 'wrap',
-
-                        gap: '45px'
-
-                    }}>
-
-                        {brands.map((brand, idx) => (
-
-                            <div
-
-                                key={idx}
-
-                                style={{
-
-                                    display: 'flex',
-
-                                    alignItems: 'center',
-
-                                    justifyContent: 'center',
-
-                                    height: '45px',
-
-                                    transition: 'opacity 0.2s ease',
-
-                                    cursor: 'pointer'
-
-                                }}
-
-                            >
-
-                                <img
-
-                                    src={brand.logo}
-
-                                    alt={brand.name}
-
-                                    style={{
-
-                                        maxHeight: '40px',
-
-                                        maxWidth: '130px',
-
-                                        objectFit: 'contain'
-
-                                    }}
-
-                                />
-
-                            </div>
-
-                        ))}
-
+            {/* פאנל היצרנים והשותפים - פס לוגואים נע ברציפות */}
+            <section aria-label="שותפים, יצרנים ולקוחות" style={{ padding: '30px 20px 80px', background: '#f8fafc' }}>
+                <div className="brands-panel">
+                    <div className="brands-header">
+                        <h3 className="brands-title">שותפים, יצרנים ולקוחות מובילים בתעשייה</h3>
+                        <button
+                            type="button"
+                            className="brands-toggle"
+                            onClick={() => setBrandsPaused((p) => !p)}
+                            aria-label={brandsPaused ? 'הפעלת תנועת הלוגואים' : 'עצירת תנועת הלוגואים'}
+                        >
+                            {brandsPaused ? '▶' : '❚❚'}
+                        </button>
                     </div>
 
+                    <div className="brands-viewport">
+                        {/* הרשימה מוצגת 4 פעמים כדי שהתנועה תהיה רציפה בלי קפיצה */}
+                        <div className={`brands-track${brandsPaused ? ' is-paused' : ''}`}>
+                            {[0, 1, 2, 3].map((copy) =>
+                                brands.map((brand) => (
+                                    <div className="brand-logo" key={`${copy}-${brand.name}`} aria-hidden={copy > 0 ? true : undefined}>
+                                        <img src={brand.logo} alt={copy === 0 ? brand.name : ''} loading="lazy" />
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    </div>
                 </div>
-
             </section>
 
         </div>

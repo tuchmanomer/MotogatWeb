@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getShopProducts } from '@/lib/shopSheets';
+import AddToCartButton from '@/components/AddToCartButton';
 
 export default function BooksPage() {
     const [products, setProducts] = useState<any[]>([]);
@@ -34,6 +35,7 @@ export default function BooksPage() {
                 <Link href="/shop/diagnostic" className="btnSecondary">מוצרי אבחון</Link>
                 <Link href="/shop/demonstration" className="btnSecondary">אמצעי המחשה</Link>
                 <Link href="/shop/books" className="btnPrimary">ספרי לימוד</Link>
+                <Link href="/shop/workingTools" className="btnSecondary">כלי עבודה</Link>
             </div>
 
             {/* תוכן העמוד */}
@@ -65,7 +67,7 @@ function ProductCard({ product }: { product: any }) {
         : '';
 
     return (
-        <div style={{
+        <div className="shop-card" style={{
             background: '#1e293b',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             borderRadius: '18px',
@@ -145,29 +147,35 @@ function ProductCard({ product }: { product: any }) {
                     <div>
                         <span style={{ fontWeight: 'bold', fontSize: '1.3rem', color: '#38bdf8', direction: 'ltr', display: 'block', textAlign: 'right' }}>₪{product.price}</span>
                         <span style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'block', marginTop: '2px', textAlign: 'right' }}>לא כולל מע&quot;מ</span>
+                        {product.inStock === false && (
+                            <span style={{ fontSize: '0.8rem', color: '#f59e0b', fontWeight: 700, display: 'block', marginTop: '4px', textAlign: 'right' }}>לא זמין במלאי *</span>
+                        )}
                     </div>
 
                     {/* כפתור רכישה כחול מוקם בצד שמאל */}
                     {formattedBuyLink ? (
-                        <a
-                            href={formattedBuyLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                        // הוספה לעגלה במקום מעבר ישיר לדף התשלום - באותו עיצוב של כפתור הרכישה
+                        <AddToCartButton
+                            product={{
+                                id: `books-${product.id}`,
+                                inStock: product.inStock !== false,
+                                title: product.title || '',
+                                price: String(product.price ?? ''),
+                                image: productImage || '',
+                            }}
+                            label="רכישה 🛒"
                             style={{
-                                backgroundColor: '#0284c7',
+                                display: 'inline-block',
+                                background: '#0369a1',
                                 color: '#ffffff',
                                 border: 'none',
                                 padding: '10px 18px',
                                 borderRadius: '10px',
                                 fontWeight: 600,
                                 fontSize: '0.95rem',
-                                textDecoration: 'none',
-                                display: 'inline-block',
                                 transition: 'background-color 0.2s ease'
                             }}
-                        >
-                            רכישה 🛒
-                        </a>
+                        />
                     ) : (
                         <button
                             disabled

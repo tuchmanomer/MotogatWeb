@@ -41,6 +41,8 @@ export default async function DemonstrationPage({
                 <Link href="/shop/diagnostic" className="btnSecondary">מוצרי אבחון</Link>
                 <Link href="/shop/demonstration" className="btnPrimary">אמצעי המחשה</Link>
                 <Link href="/shop/books" className="btnSecondary">ספרי לימוד</Link>
+                <Link href="/shop/workingTools" className="btnSecondary">כלי עבודה</Link>
+
             </div>
 
             {/* שורת חיפוש מעוצבת בדיוק כמו בקורסים */}
@@ -98,6 +100,7 @@ export default async function DemonstrationPage({
                             <Link
                                 key={`product-${product.id || 'item'}-${idx}`}
                                 href={`/shop/demonstration/${product.id}`}
+                                className="shop-card"
                                 style={{
                                     background: '#1e293b', // רקע כהה תואם לעיצוב הספרים
                                     border: '1px solid rgba(255, 255, 255, 0.12)',
@@ -178,7 +181,7 @@ export default async function DemonstrationPage({
             )}
 
             <div style={{ marginTop: '50px', textAlign: 'center' }}>
-                <Link href="/" style={{ color: '#60a5fa', textDecoration: 'none', fontWeight: 500 }}>
+                <Link href="/" style={{ color: '#1d4ed8', textDecoration: 'none', fontWeight: 500 }}>
                     → חזרה לעמוד הבית
                 </Link>
             </div>

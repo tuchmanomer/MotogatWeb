@@ -85,7 +85,7 @@ export default async function CoursesPage({
                             : (idx + 1);
 
                         return (
-                            <div key={`course-${courseId}`} style={{
+                            <div key={`course-${courseId}`} className="shop-card" style={{
                                 border: '1px solid rgba(255, 255, 255, 0.12)',
                                 borderRadius: '18px',
                                 padding: '26px',
@@ -121,7 +121,7 @@ export default async function CoursesPage({
                                                 }}
                                             />
                                         ) : (
-                                            <div style={{ color: '#64748b', fontSize: '0.9rem' }}>אין תמונה זמינה</div>
+                                            <div style={{ color: '#94a3b8', fontSize: '0.9rem' }}>אין תמונה זמינה</div>
                                         )}
                                     </div>
 
@@ -170,7 +170,7 @@ export default async function CoursesPage({
             )}
 
             <div style={{ marginTop: '60px', textAlign: 'center' }}>
-                <Link href="/" style={{ color: '#38bdf8', textDecoration: 'none', fontWeight: 500 }}>
+                <Link href="/" style={{ color: '#1d4ed8', textDecoration: 'none', fontWeight: 500 }}>
                     → חזרה לעמוד הבית
                 </Link>
             </div>

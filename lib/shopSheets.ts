@@ -54,6 +54,10 @@ export async function getShopProducts(sheetName: string = 'diagnostic') {
         const allRows = parseCSVRows(csvText);
         if (allRows.length <= 1) return [];
 
+        // איתור עמודת הסטטוס לפי הכותרת (status / סטטוס) - כי מיקום העמודה שונה בין הגיליונות
+        const headers = allRows[0].map(h => h.replace(/^"|"$/g, '').trim().toLowerCase());
+        const statusIdx = headers.findIndex(h => h === 'status' || h === 'סטטוס');
+
         // דילוג על שורת ה-Header
         const dataRows = allRows.slice(1);
 
@@ -67,6 +71,8 @@ export async function getShopProducts(sheetName: string = 'diagnostic') {
                 price: cleanCell(cols[3]) || '',
                 image: cleanCell(cols[4]) || '',
                 buy: cleanCell(cols[5]) || '', // <-- הוספת מיפוי לעמודה F עבור קישור הרכישה
+                // X = לא במלאי. V או תא ריק (או גיליון בלי עמודת סטטוס) = במלאי
+                inStock: statusIdx === -1 || !/^[xX×✗✘❌]$/.test(cleanCell(cols[statusIdx])),
             };
         }).filter(item => item.title !== '');
     } catch (error) {

@@ -33,6 +33,7 @@ export default async function ArticlesPage() {
                             return (
                                 <Link
                                     key={`article-${articleId}`}
+                                    className="shop-card"
                                     href={`/articles/${articleId}`}
                                     style={{
                                         background: '#1e293b',
@@ -117,7 +118,7 @@ export default async function ArticlesPage() {
                 )}
 
                 <div style={{ marginTop: '60px', textAlign: 'center' }}>
-                    <Link href="/" style={{ color: '#0284c7', textDecoration: 'none', fontWeight: 500, fontSize: '1.05rem' }}>
+                    <Link href="/" style={{ color: '#0369a1', textDecoration: 'none', fontWeight: 500, fontSize: '1.05rem' }}>
                         ← חזרה לעמוד הבית
                     </Link>
                 </div>

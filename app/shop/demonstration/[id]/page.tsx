@@ -33,7 +33,7 @@ export default async function ProductDetailPage({
 
     return (
         <div className="container" style={{ padding: '60px 20px', maxWidth: '1000px', margin: '0 auto', color: '#fff' }}>
-            <Link href="/shop/demonstration" style={{ color: '#94a3b8', textDecoration: 'none', display: 'inline-block', marginBottom: '25px', fontSize: '0.95rem' }}>
+            <Link href="/shop/demonstration" style={{ color: '#475569', textDecoration: 'none', display: 'inline-block', marginBottom: '25px', fontSize: '0.95rem' }}>
                 ← חזרה לכל אמצעי ההמחשה
             </Link>
 
@@ -121,7 +121,7 @@ export default async function ProductDetailPage({
                                     justifyContent: 'center',
                                     gap: '8px',
                                     textAlign: 'center',
-                                    background: '#22c55e',
+                                    background: '#15803d',
                                     color: '#fff',
                                     padding: '14px 20px',
                                     borderRadius: '12px',

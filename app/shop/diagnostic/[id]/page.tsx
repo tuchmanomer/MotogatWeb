@@ -38,7 +38,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <div style={{ padding: '60px 20px', maxWidth: '1000px', margin: '0 auto', color: '#fff', direction: 'rtl' }}>
             <div
                 style={{
-                    background: 'rgba(30, 41, 59, 0.7)',
+                    background: '#1e293b',
                     border: '1px solid rgba(255, 255, 255, 0.1)',
                     borderRadius: '24px',
                     padding: '40px',
@@ -80,9 +80,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
                     )}
 
                     {/* מחיר אמיתי מהגיליון עם סימן שקל מימין */}
-                    <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#38bdf8', marginBottom: '30px', direction: 'ltr', textAlign: 'right' }}>
+                    <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#38bdf8', marginBottom: product.inStock === false ? '8px' : '30px', direction: 'ltr', textAlign: 'right' }}>
                         {product.price} ₪
                     </div>
+                    {product.inStock === false && (
+                        <div style={{ color: '#f59e0b', fontWeight: 700, fontSize: '1rem', marginBottom: '30px' }}>
+                            לא זמין במלאי * <span style={{ fontWeight: 400, color: '#94a3b8' }}>(זמן אספקה 21 ימי עסקים)</span>
+                        </div>
+                    )}
 
                     {/* אזור הכפתורים */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>

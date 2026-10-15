@@ -8,9 +8,6 @@ function ContactFormContent() {
     const searchParams = useSearchParams();
     const subjectParam = searchParams.get('subject') || '';
 
-    // כתובת ה-Web App של Google Apps Script
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzFQM-7JsB963FDWylSfL206jlczTgGppiMseQm1_9zehSNl5wIcHHyQVrkyY59ztCSPA/exec';
-
     const [formData, setFormData] = useState({
         fullName: '',
         phone: '',
@@ -35,19 +32,28 @@ function ContactFormContent() {
         e.preventDefault();
         setLoading(true);
 
-        const formPayload = new FormData();
-        formPayload.append('fullName', formData.fullName);
-        formPayload.append('phone', formData.phone);
-        formPayload.append('email', formData.email);
-        formPayload.append('course', formData.subject);
-        formPayload.append('notes', formData.message);
+        // שמירה בגיליון "הזמנות אתר" (לשונית מתעניינים) דרך השרת של האתר
+        const honeypot = (e.currentTarget as HTMLFormElement).elements.namedItem('website') as HTMLInputElement | null;
 
         try {
-            await fetch(SCRIPT_URL, {
+            const res = await fetch('/api/lead', {
                 method: 'POST',
-                body: formPayload,
-                mode: 'no-cors'
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    fullName: formData.fullName,
+                    phone: formData.phone,
+                    email: formData.email,
+                    subject: formData.subject,
+                    notes: formData.message,
+                    website: honeypot?.value || '',
+                }),
             });
+            const data = await res.json().catch(() => ({}));
+
+            if (!res.ok) {
+                alert(data.error || 'אירעה שגיאה בשליחת הנתונים, אנא נסה שוב.');
+                return;
+            }
 
             setSubmitted(true);
         } catch (error) {
@@ -102,6 +108,8 @@ function ContactFormContent() {
             boxSizing: 'border-box'
         }}>
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '22px', width: '100%', boxSizing: 'border-box' }}>
+                {/* שדה מלכודת לבוטים - מוסתר מהגולשים */}
+                <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', border: 0, overflow: 'hidden', clipPath: 'inset(50%)', whiteSpace: 'nowrap', opacity: 0 }} />
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     <label style={{ fontSize: '0.95rem', color: '#cbd5e1' }}>שם מלא *</label>
                     <input
@@ -242,16 +250,16 @@ export default function ContactPage() {
             <h1 className="pageTitle" style={{ textAlign: 'center', fontSize: '2.5rem', fontWeight: 700, marginBottom: '10px' }}>
                 השארת פרטים
             </h1>
-            <p style={{ textAlign: 'center', color: '#94a3b8', fontSize: '1.1rem', marginBottom: '40px' }}>
+            <p style={{ textAlign: 'center', color: '#475569', fontSize: '1.1rem', marginBottom: '40px' }}>
                 השאר פרטים ונחזור אליך בהקדם לייעוץ והרשמה.
             </p>
 
-            <Suspense fallback={<div style={{ textAlign: 'center', color: '#94a3b8' }}>טוען טופס...</div>}>
+            <Suspense fallback={<div style={{ textAlign: 'center', color: '#475569' }}>טוען טופס...</div>}>
                 <ContactFormContent />
             </Suspense>
 
             <div style={{ marginTop: '40px', textAlign: 'center' }}>
-                <Link href="/" style={{ color: '#38bdf8', textDecoration: 'none', fontWeight: 500 }}>
+                <Link href="/" style={{ color: '#1d4ed8', textDecoration: 'none', fontWeight: 500 }}>
                     → חזרה לעמוד הבית
                 </Link>
             </div>

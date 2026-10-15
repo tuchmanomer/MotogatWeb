@@ -25,7 +25,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
         return (
             <div style={{ padding: '150px 20px', textAlign: 'center', color: '#fff' }}>
                 <h2>הקורס אינו נמצא</h2>
-                <Link href="/courses" style={{ color: '#38bdf8', display: 'inline-block', marginTop: '20px' }}>
+                <Link href="/courses" style={{ color: '#1d4ed8', display: 'inline-block', marginTop: '20px' }}>
                     ← חזרה לרשימת הקורסים
                 </Link>
             </div>
@@ -54,7 +54,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
 
     return (
         <div style={{ padding: '120px 20px 80px', maxWidth: '900px', margin: '0 auto', color: '#fff' }}>
-            <Link href="/courses" style={{ color: '#38bdf8', textDecoration: 'none', fontSize: '0.95rem', display: 'inline-block', marginBottom: '20px' }}>
+            <Link href="/courses" style={{ color: '#1d4ed8', textDecoration: 'none', fontSize: '0.95rem', display: 'inline-block', marginBottom: '20px' }}>
                 ← חזרה לקורסים
             </Link>
 
@@ -140,7 +140,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{
-                            backgroundColor: '#22c55e',
+                            backgroundColor: '#15803d',
                             color: '#ffffff',
                             padding: '14px 28px',
                             borderRadius: '10px',

@@ -131,7 +131,7 @@ export default function AccessibilityStatementPage() {
                 </div>
             </section>
 
-            <footer style={{ borderTop: '1px solid #e2e8f0', paddingTop: '16px', fontSize: '0.8rem', color: '#94a3b8' }}>
+            <footer style={{ borderTop: '1px solid #e2e8f0', paddingTop: '16px', fontSize: '0.8rem', color: '#475569' }}>
                 תאריך עדכון הצהרת הנגישות: אוקטובר 2026 | מקור טופס הצהרת נגישות: צריח מדיה
             </footer>
         </main>

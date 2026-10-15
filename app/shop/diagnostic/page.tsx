@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getShopProducts } from '@/lib/shopSheets';
+import AddToCartButton from '@/components/AddToCartButton';
 
 export default function DiagnosticPage() {
     const [products, setProducts] = useState<any[]>([]);
@@ -45,6 +46,7 @@ export default function DiagnosticPage() {
                 <Link href="/shop/diagnostic" className="btnPrimary">מוצרי אבחון</Link>
                 <Link href="/shop/demonstration" className="btnSecondary">אמצעי המחשה</Link>
                 <Link href="/shop/books" className="btnSecondary">ספרי לימוד</Link>
+                <Link href="/shop/workingTools" className="btnSecondary">כלי עבודה</Link>
             </div>
 
             {/* שורת חיפוש מעוצבת */}
@@ -94,13 +96,13 @@ export default function DiagnosticPage() {
             ) : (
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '30px', alignItems: 'stretch' }}>
                     {filteredProducts.map((product: any, idx: number) => (
-                        <ProductCard key={product.id || idx} product={product} />
+                        <ProductCard key={`${product.id || 'prod'}-${idx}`} product={product} />
                     ))}
                 </div>
             )}
 
             <div style={{ marginTop: '50px', textAlign: 'center' }}>
-                <Link href="/" style={{ color: '#60a5fa', textDecoration: 'none', fontWeight: 500 }}>
+                <Link href="/" style={{ color: '#1d4ed8', textDecoration: 'none', fontWeight: 500 }}>
                     ← חזרה לעמוד הבית
                 </Link>
             </div>
@@ -113,7 +115,7 @@ function ProductCard({ product }: { product: any }) {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div style={{
+        <div className="shop-card" style={{
             background: '#1e293b',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             borderRadius: '18px',
@@ -195,30 +197,36 @@ function ProductCard({ product }: { product: any }) {
                     <div style={{ textAlign: 'right', width: '100%' }}>
                         <span style={{ fontWeight: 'bold', fontSize: '1.3rem', color: '#38bdf8', direction: 'ltr', display: 'inline-block' }}>₪{product.price}</span>
                         <span style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'block', marginTop: '2px' }}>לא כולל מע&quot;מ</span>
+                        {product.inStock === false && (
+                            <span style={{ fontSize: '0.8rem', color: '#f59e0b', fontWeight: 700, display: 'block', marginTop: '4px', textAlign: 'right' }}>לא זמין במלאי *</span>
+                        )}
                     </div>
 
                     {product.buy ? (
-                        <a
-                            href={product.buy}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                        // הוספה לעגלה במקום מעבר ישיר לדף התשלום - באותו עיצוב של כפתור הרכישה
+                        <AddToCartButton
+                            product={{
+                                id: String(product.id),
+                                inStock: product.inStock !== false,
+                                title: product.title || '',
+                                price: String(product.price ?? ''),
+                                image: product.image || '',
+                            }}
+                            label="הוספה לעגלה 🛒"
                             style={{
-                                backgroundColor: '#2563eb',
+                                display: 'inline-block',
+                                background: '#2563eb',
                                 color: '#ffffff',
                                 border: 'none',
                                 padding: '10px 18px',
                                 borderRadius: '10px',
                                 fontWeight: 600,
                                 fontSize: '0.95rem',
-                                textDecoration: 'none',
-                                display: 'inline-block',
                                 transition: 'background-color 0.2s ease',
                                 whiteSpace: 'nowrap',
                                 marginRight: '15px'
                             }}
-                        >
-                            רכישה 🛒
-                        </a>
+                        />
                     ) : (
                         <span style={{ color: '#94a3b8', fontSize: '0.9rem', whiteSpace: 'nowrap', marginRight: '15px' }}>לא זמין לרכישה</span>
                     )}

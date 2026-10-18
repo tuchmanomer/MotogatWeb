@@ -147,6 +147,7 @@ export default async function CoursesPage({
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '18px', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
                                     <Link
                                         href={`/courses/${courseId}`}
+                                        className="more-link"
                                         style={{
                                             color: '#38bdf8',
                                             textDecoration: 'none',
@@ -157,7 +158,7 @@ export default async function CoursesPage({
                                             gap: '4px'
                                         }}
                                     >
-                                        לפרטים נוספים ←
+                                        לפרטים נוספים <span className="more-arrow" aria-hidden="true">←</span>
                                     </Link>
                                     <span style={{ fontWeight: 'bold', fontSize: '1.3rem', color: '#38bdf8' }}>
                                         {course.price ? `₪${course.price}` : ''}

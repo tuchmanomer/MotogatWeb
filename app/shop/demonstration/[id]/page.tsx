@@ -1,4 +1,5 @@
 ﻿import Link from 'next/link';
+import SpecSheetLink from '@/components/SpecSheetLink';
 import { getShopProducts } from '@/lib/shopSheets';
 
 export const revalidate = 0;
@@ -94,45 +95,22 @@ export default async function ProductDetailPage({
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                            <Link
+                            <SpecSheetLink
                                 href={`/contact?subject=${encodeURIComponent(`התעניינות במוצר אמצעי המחשה: ${product.title}`)}`}
-                                style={{
-                                    display: 'block',
-                                    textAlign: 'center',
-                                    background: '#2563eb',
-                                    color: '#fff',
-                                    padding: '14px 20px',
-                                    borderRadius: '12px',
-                                    textDecoration: 'none',
-                                    fontWeight: 'bold',
-                                    fontSize: '1.1rem',
-                                    transition: 'background 0.2s'
-                                }}
-                            >
-                                השארת פרטים והתעניינות
-                            </Link>
-
-                            <a
-                                href = "https://wa.me/972548933777"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{
-                                    display: 'flex', 
-                                    justifyContent: 'center',
-                                    gap: '8px',
-                                    textAlign: 'center',
-                                    background: '#15803d',
-                                    color: '#fff',
-                                    padding: '14px 20px',
-                                    borderRadius: '12px',
-                                    textDecoration: 'none',
-                                    fontWeight: 'bold',
-                                    fontSize: '1.1rem',
-                                    transition: 'background 0.2s'
-                                }}
-                            >
-                                לפרטים נוספים
-                            </a>
+                                label="השארת פרטים והתעניינות"
+                                subtitle="נחזור אליך בהקדם"
+                                icon="contact"
+                                accent="139, 92, 246"
+                                newTab={false}
+                            />
+                            <SpecSheetLink
+                                href={`https://wa.me/972548933777?text=${encodeURIComponent(`שלום, אני מעוניין לקבל פרטים נוספים על אמצעי ההמחשה: ${product.title}`)}`}
+                                label="לפרטים נוספים בוואטסאפ"
+                                subtitle="מענה מהיר · נפתח בלשונית חדשה"
+                                icon="phone"
+                                accent="22, 163, 74"
+                                ariaLabel="לפרטים נוספים בוואטסאפ (נפתח בחלון חדש)"
+                            />
                         </div>
                     </div>
                 </div>

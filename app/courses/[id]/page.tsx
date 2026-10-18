@@ -1,4 +1,5 @@
 ﻿import Link from 'next/link';
+import SpecSheetLink from '@/components/SpecSheetLink';
 import { getSheetData } from '@/lib/sheets';
 
 export const revalidate = 0;
@@ -119,39 +120,24 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
 
                 {/* כפתורי פעולה */}
                 <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
-                    <Link
+                    <SpecSheetLink
                         href={`/contact?subject=${encodeURIComponent(`התעניינות בקורס: ${course.title}`)}`}
-                        style={{
-                            backgroundColor: '#2563eb',
-                            color: '#ffffff',
-                            padding: '14px 28px',
-                            borderRadius: '10px',
-                            fontWeight: 600,
-                            textDecoration: 'none',
-                            display: 'inline-block',
-                            transition: 'background-color 0.2s'
-                        }}
-                    >
-                        הירשם עכשיו / השאר פרטים
-                    </Link>
-
-                    <a
-                        href="https://wa.me/972548933777"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                            backgroundColor: '#15803d',
-                            color: '#ffffff',
-                            padding: '14px 28px',
-                            borderRadius: '10px',
-                            fontWeight: 600,
-                            textDecoration: 'none',
-                            display: 'inline-block',
-                            transition: 'background-color 0.2s'
-                        }}
-                    >
-                        לפרטים נוספים
-                    </a>
+                        label="הירשם עכשיו / השאר פרטים"
+                        subtitle="נחזור אליך בהקדם"
+                        icon="contact"
+                        accent="139, 92, 246"
+                        newTab={false}
+                        style={{ flex: '1 1 260px' }}
+                    />
+                    <SpecSheetLink
+                        href={`https://wa.me/972548933777?text=${encodeURIComponent(`שלום, אני מעוניין לקבל פרטים נוספים על הקורס: ${course.title}`)}`}
+                        label="לפרטים נוספים בוואטסאפ"
+                        subtitle="מענה מהיר · נפתח בלשונית חדשה"
+                        icon="phone"
+                        accent="22, 163, 74"
+                        ariaLabel="לפרטים נוספים בוואטסאפ (נפתח בחלון חדש)"
+                        style={{ flex: '1 1 260px' }}
+                    />
                 </div>
             </div>
         </div>

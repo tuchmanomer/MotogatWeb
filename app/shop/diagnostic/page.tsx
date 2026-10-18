@@ -112,7 +112,8 @@ export default function DiagnosticPage() {
 
 // קומפוננטת כרטיס מוצר עם רקע תמונה לבן
 function ProductCard({ product }: { product: any }) {
-    const [isOpen, setIsOpen] = useState(false);
+    // לחיצה על המוצר פותחת את דף המוצר המלא (תיאור מלא + מפרט טכני)
+    const productUrl = `/shop/diagnostic/${product.id}`;
 
     return (
         <div className="shop-card" style={{
@@ -128,6 +129,7 @@ function ProductCard({ product }: { product: any }) {
             boxSizing: 'border-box'
         }}>
             <div>
+                <Link href={productUrl} aria-label={`${product.title} - לפרטים נוספים`} style={{ textDecoration: 'none', display: 'block' }}>
                 {/* אזור תמונה בריבוע לבן */}
                 <div style={{
                     background: '#ffffff',
@@ -150,49 +152,42 @@ function ProductCard({ product }: { product: any }) {
                 <h3 style={{ margin: '0 0 12px', fontSize: '1.25rem', color: '#fff', fontWeight: 'bold', minHeight: '3.5rem', display: 'flex', alignItems: 'center' }}>
                     {product.title}
                 </h3>
+                </Link>
 
-                {/* תיאור מוצר עם כפתור פתיחה */}
-                <div style={{ color: '#94a3b8', fontSize: '0.95rem', lineHeight: '1.5', marginBottom: '8px' }}>
-                    {isOpen ? (
-                        <p style={{ margin: 0, whiteSpace: 'pre-line' }}>{product.description}</p>
-                    ) : (
-                        <p style={{
-                            margin: 0,
-                            display: '-webkit-box',
-                            WebkitLineClamp: 3,
-                            WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'pre-line'
-                        }}>
-                            {product.description}
-                        </p>
-                    )}
-                </div>
+                {/* תיאור מקוצר (2 שורות) - התיאור המלא בדף המוצר */}
+                <p style={{
+                    color: '#94a3b8',
+                    fontSize: '0.95rem',
+                    lineHeight: '1.5',
+                    margin: '0 0 8px',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'pre-line'
+                }}>
+                    {product.description}
+                </p>
 
-                <button
-                    onClick={() => setIsOpen(!isOpen)}
+                <Link
+                    href={productUrl}
+                    className="more-link"
                     style={{
-                        background: 'transparent',
-                        border: 'none',
                         color: '#38bdf8',
                         fontWeight: 600,
                         fontSize: '0.9rem',
-                        cursor: 'pointer',
-                        padding: 0,
-                        textAlign: 'right',
-                        marginBottom: '20px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px'
+                        textDecoration: 'none',
+                        display: 'inline-block',
+                        marginBottom: '20px'
                     }}
                 >
-                    {isOpen ? 'הצג פחות ▲' : 'פרטים נוספים... ▼'}
-                </button>
+                    לפרטים נוספים <span className="more-arrow" aria-hidden="true">←</span>
+                </Link>
             </div>
 
             <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '15px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', marginBottom: '12px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '15px', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
                     {/* המחיר מוצמד בדיוק לקו הימני של הכרטיס */}
                     <div style={{ textAlign: 'right', width: '100%' }}>
                         <span style={{ fontWeight: 'bold', fontSize: '1.3rem', color: '#38bdf8', direction: 'ltr', display: 'inline-block' }}>₪{product.price}</span>
@@ -231,26 +226,6 @@ function ProductCard({ product }: { product: any }) {
                         <span style={{ color: '#94a3b8', fontSize: '0.9rem', whiteSpace: 'nowrap', marginRight: '15px' }}>לא זמין לרכישה</span>
                     )}
                 </div>
-
-                {/* כפתור השארת פרטים והתעניינות */}
-                <Link
-                    href={`/contact?subject=${encodeURIComponent(`התעניינות במוצר אבחון: ${product.title}`)}`}
-                    style={{
-                        display: 'block',
-                        textAlign: 'center',
-                        background: 'transparent',
-                        color: '#38bdf8',
-                        border: '1px solid rgba(56, 189, 248, 0.3)',
-                        padding: '10px',
-                        borderRadius: '10px',
-                        textDecoration: 'none',
-                        fontWeight: 600,
-                        fontSize: '0.9rem',
-                        transition: 'all 0.2s ease'
-                    }}
-                >
-                    השארת פרטים והתעניינות
-                </Link>
             </div>
         </div>
     );

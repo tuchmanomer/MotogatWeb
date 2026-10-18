@@ -196,6 +196,7 @@ function ProductCard({ product }: { product: any }) {
                 </div>
 
                 <Link
+                    className="ghost-btn"
                     href={`/contact?subject=${encodeURIComponent(`התעניינות במוצר: ${product.title}`)}`}
                     style={{
                         display: 'block',

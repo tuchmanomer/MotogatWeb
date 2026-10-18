@@ -193,6 +193,72 @@ export default function RootLayout({
                         transform: scale(1.05);
                     }
 
+                    /* כפתור "ליצירת קשר" בבאר העליון - ירוק וואטסאפ עם אייקון, זוהר והרמה */
+                    .header-contact {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 6px;
+                        padding: 7px 14px;
+                        border-radius: 10px;
+                        background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+                        color: #052e16;
+                        font-weight: 700;
+                        font-size: 13px;
+                        text-decoration: none;
+                        white-space: nowrap;
+                        box-shadow: 0 6px 16px -6px rgba(34, 197, 94, 0.7);
+                        transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+                    }
+                    .header-contact:hover {
+                        transform: translateY(-2px);
+                        filter: brightness(1.06);
+                        box-shadow: 0 10px 22px -8px rgba(34, 197, 94, 0.9);
+                    }
+
+                    /* אריחי פעולה בדף המוצר - מסמכי PDF והשארת פרטים (components/SpecSheetLink.tsx) */
+                    .doc-tile:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.5);
+                    }
+                    .doc-tile .tile-arrow {
+                        transition: transform 0.2s ease;
+                    }
+                    .doc-tile:hover .tile-arrow {
+                        transform: translateX(-4px);
+                    }
+
+                    /* כפתור "הוספה לעגלה" (components/AddToCartButton.tsx) - גרדיאנט כחול עם זוהר והרמה */
+                    .cart-btn {
+                        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+                        box-shadow: 0 8px 18px -8px rgba(37, 99, 235, 0.75);
+                        transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease !important;
+                    }
+                    .cart-btn:hover {
+                        transform: translateY(-2px);
+                        filter: brightness(1.08);
+                        box-shadow: 0 14px 26px -10px rgba(37, 99, 235, 0.9);
+                    }
+                    .cart-btn:active {
+                        transform: translateY(0);
+                    }
+
+                    /* קישור "לפרטים נוספים" בכרטיסי המוצרים - החץ זז במעבר עכבר */
+                    .more-arrow {
+                        display: inline-block;
+                        transition: transform 0.2s ease;
+                    }
+                    .more-link:hover .more-arrow,
+                    .shop-card:hover .more-arrow {
+                        transform: translateX(-5px);
+                    }
+
+                    /* כפתורי מסגרת (השארת פרטים) בכרטיסי החנות */
+                    .ghost-btn:hover {
+                        background: rgba(56, 189, 248, 0.12) !important;
+                        border-color: rgba(56, 189, 248, 0.6) !important;
+                        transform: translateY(-2px);
+                    }
+
                     /* כפתור נגישות עגול כחול בפינה הימנית התחתונה (components/AccessibilityButton.tsx) */
                     .a11y-fab {
                         position: fixed;
@@ -312,18 +378,10 @@ export default function RootLayout({
                                 rel="noopener noreferrer"
                                 aria-label="ליצירת קשר בוואטסאפ (נפתח בחלון חדש)"
                                 className="header-contact"
-                                style={{
-                                backgroundColor: '#22c55e',
-                                color: '#000000',
-                                border: 'none',
-                                padding: '6px 14px',
-                                borderRadius: '6px',
-                                fontWeight: 700,
-                                fontSize: '13px',
-                                textDecoration: 'none',
-                                display: 'inline-block',
-                                whiteSpace: 'nowrap'
-                            }}>
+                            >
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                    <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z" />
+                                </svg>
                                 ליצירת קשר
                             </Link>
 

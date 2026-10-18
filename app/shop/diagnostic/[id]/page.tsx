@@ -1,6 +1,7 @@
 ﻿import Link from 'next/link';
 import { getShopProducts } from '@/lib/shopSheets';
 import AddToCartButton from '@/components/AddToCartButton';
+import SpecSheetLink from '@/components/SpecSheetLink';
 
 export const revalidate = 0;
 export const dynamic = 'force-dynamic';
@@ -36,6 +37,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
     return (
         <div style={{ padding: '60px 20px', maxWidth: '1000px', margin: '0 auto', color: '#fff', direction: 'rtl' }}>
+            <Link href="/shop/diagnostic" style={{ color: '#475569', textDecoration: 'none', display: 'inline-block', marginBottom: '20px', fontSize: '0.95rem', fontWeight: 600 }}>
+                → חזרה למוצרי האבחון
+            </Link>
+
             <div
                 style={{
                     background: '#1e293b',
@@ -51,9 +56,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
                     boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)',
                 }}
             >
-                {/* תמונת המוצר מימין */}
-                <div style={{ flex: '1', minWidth: '280px', display: 'flex', justifyContent: 'center' }}>
-                    <div style={{ background: '#fff', borderRadius: '16px', padding: '20px', maxWidth: '400px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {/* תמונת המוצר מימין, ומתחתיה מסמכי ה-PDF */}
+                <div style={{ flex: '1', minWidth: '280px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px' }}>
+                    <div style={{ background: '#fff', borderRadius: '16px', padding: '20px', maxWidth: '400px', width: '100%', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         {product.image ? (
                             <img
                                 src={product.image}
@@ -64,6 +69,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
                             <div style={{ color: '#000', height: '250px', display: 'flex', alignItems: 'center' }}>אין תמונה זמינה</div>
                         )}
                     </div>
+
+                    {/* מסמכי PDF - כל אריח מופיע רק אם יש קישור בעמודה המתאימה בגיליון (specs / user manual) */}
+                    {(product.spec || product.manual) && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '400px', width: '100%' }}>
+                            <SpecSheetLink href={product.spec} label="מפרט טכני" icon="spec" accent="14, 165, 233" />
+                            <SpecSheetLink href={product.manual} label="מדריך משתמש" icon="manual" accent="16, 185, 129" />
+                        </div>
+                    )}
                 </div>
 
                 {/* פרטי המוצר, תיאור, מחיר וכפתורים משמאל */}
@@ -95,24 +108,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
                         <AddToCartButton product={product} />
 
                         {/* כפתור השארת פרטים / התעניינות במוצר */}
-                        <Link
+                        <SpecSheetLink
                             href={`/contact?subject=${encodeURIComponent(`התעניינות במוצר: ${product.title}`)}`}
-                            style={{
-                                display: 'block',
-                                textAlign: 'center',
-                                background: 'transparent',
-                                color: '#38bdf8',
-                                border: '1px solid #38bdf8',
-                                padding: '12px 20px',
-                                borderRadius: '12px',
-                                textDecoration: 'none',
-                                fontWeight: 600,
-                                fontSize: '1rem',
-                                transition: 'all 0.2s ease',
-                            }}
-                        >
-                            השארת פרטים והתעניינות במוצר
-                        </Link>
+                            label="השארת פרטים והתעניינות במוצר"
+                            subtitle="נחזור אליך בהקדם"
+                            icon="contact"
+                            accent="139, 92, 246"
+                            newTab={false}
+                        />
                     </div>
                 </div>
             </div>

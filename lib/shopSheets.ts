@@ -57,12 +57,22 @@ export async function getShopProducts(sheetName: string = 'diagnostic') {
         // איתור עמודת הסטטוס לפי הכותרת (status / סטטוס) - כי מיקום העמודה שונה בין הגיליונות
         const headers = allRows[0].map(h => h.replace(/^"|"$/g, '').trim().toLowerCase());
         const statusIdx = headers.findIndex(h => h === 'status' || h === 'סטטוס');
+        // עמודות קישורים למסמכים (PDF) - אופציונליות, לפי הכותרת
+        const specIdx = headers.findIndex(h => ['spec', 'specs', 'מפרט', 'מפרט טכני', 'pdf'].includes(h));
+        const manualIdx = headers.findIndex(h => ['user manual', 'manual', 'מדריך', 'מדריך משתמש'].includes(h));
 
         // דילוג על שורת ה-Header
         const dataRows = allRows.slice(1);
 
         return dataRows.map((cols, idx) => {
             const cleanCell = (val: string) => val ? val.replace(/^"|"$/g, '').trim() : '';
+
+            // רק קישור תקין (http/https) - כדי שלא יוכנס לאתר קישור לא בטוח מהגיליון. "www..." מקבל https:// אוטומטית
+            const linkCell = (colIdx: number) => {
+                const raw = colIdx === -1 ? '' : cleanCell(cols[colIdx]);
+                const url = /^www\./i.test(raw) ? `https://${raw}` : raw;
+                return /^https?:\/\//i.test(url) ? url : '';
+            };
 
             return {
                 id: cleanCell(cols[0]) || String(idx + 1),
@@ -73,6 +83,8 @@ export async function getShopProducts(sheetName: string = 'diagnostic') {
                 buy: cleanCell(cols[5]) || '', // <-- הוספת מיפוי לעמודה F עבור קישור הרכישה
                 // X = לא במלאי. V או תא ריק (או גיליון בלי עמודת סטטוס) = במלאי
                 inStock: statusIdx === -1 || !/^[xX×✗✘❌]$/.test(cleanCell(cols[statusIdx])),
+                spec: linkCell(specIdx),     // מפרט טכני
+                manual: linkCell(manualIdx), // מדריך משתמש
             };
         }).filter(item => item.title !== '');
     } catch (error) {

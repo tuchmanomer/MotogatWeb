@@ -210,6 +210,7 @@ function ProductCard({ product }: { product: any }) {
 
                 {/* כפתור השארת פרטים והתעניינות */}
                 <Link
+                    className="ghost-btn"
                     href={`/contact?subject=${encodeURIComponent(`התעניינות בכלי עבודה: ${product.title}`)}`}
                     style={{
                         display: 'block',

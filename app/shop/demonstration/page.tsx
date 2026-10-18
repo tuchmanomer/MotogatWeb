@@ -168,7 +168,7 @@ export default async function DemonstrationPage({
 
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '15px', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
                                     <span style={{ color: '#38bdf8', fontSize: '0.95rem', fontWeight: 600 }}>
-                                        לפרטים נוספים ←
+                                        לפרטים נוספים <span className="more-arrow" aria-hidden="true">←</span>
                                     </span>
                                     <span style={{ fontWeight: 'bold', fontSize: '1.3rem', color: '#38bdf8', direction: 'ltr' }}>
                                         {product.price}

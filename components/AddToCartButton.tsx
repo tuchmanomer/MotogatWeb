@@ -50,6 +50,7 @@ export default function AddToCartButton({
 
     return (
         <button
+            className="cart-btn"
             type="button"
             onClick={handleAdd}
             style={{
